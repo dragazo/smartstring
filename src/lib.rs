@@ -150,6 +150,8 @@ pub use iter::Drain;
 mod ops;
 use ops::{string_op_grow, string_op_shrink};
 
+mod util;
+
 #[cfg(feature = "serde")]
 mod serde;
 

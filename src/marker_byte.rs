@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-use core::num::NonZeroU8;
+use crate::util::NonValueU8;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub(crate) enum Discriminant {
@@ -30,15 +30,15 @@ impl Discriminant {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub(crate) struct Marker(NonZeroU8);
+pub(crate) struct Marker(NonValueU8<3>);
 
 impl Marker {
     #[inline(always)]
-    const fn assemble(discriminant: Discriminant, data: u8) -> NonZeroU8 {
+    const fn assemble(discriminant: Discriminant, data: u8) -> NonValueU8<3> {
         debug_assert!(data < 0x40);
 
         #[allow(unsafe_code)]
-        unsafe { NonZeroU8::new_unchecked((data << 2) | 2 | discriminant.bit()) } // SAFETY: (2 | x) != 0 is guaranteed for all x
+        unsafe { NonValueU8::new_unchecked((data << 2) | discriminant.bit()) } // SAFETY: low two bits are 0x, which is not 11
     }
 
     #[inline(always)]
